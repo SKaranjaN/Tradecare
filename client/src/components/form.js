@@ -1,7 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { jwtDecode as jwt_decode } from 'jwt-decode';
 import '../../src/styles/forms.css';
 
 function Forms() {
+  const [user_id, setUser_id] = useState('');
   const [date, setDate] = useState('');
   const [ownership, setOwnership] = useState('');
   const [input, setInput] = useState('');
@@ -9,10 +11,23 @@ function Forms() {
   const [dateOfBirth, setDateOfBirth] = useState('');
 
   const dateInputRef = useRef(null);
-  console.log(date)
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+
+    if (token) {
+      const decodedToken = jwt_decode(token);
+
+      if (decodedToken) {
+        const userId = decodedToken.id;
+        setUser_id(userId);
+      }
+    }
+  }, []);
 
   const handleChange = (e) => {
-    setDate(e.target.value);
+    // Handle form input changes
+    // Example: setDate(e.target.value);
   };
 
   const handleOwnershipChange = (e) => {
@@ -34,16 +49,14 @@ function Forms() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-  const selectedFacilities = [
-    e.target.charcoal_cooler.checked && 'Charcoal Cooler',
-    e.target.hand_washing_facility.checked && 'Hand Washing Facility',
-    e.target.washrooms.checked && 'Washrooms',
-    e.target.others.checked && 'Others',
-  ].filter(Boolean);
+    const selectedFacilities = [
+      e.target.charcoal_cooler.checked && 'Charcoal Cooler',
+      e.target.hand_washing_facility.checked && 'Hand Washing Facility',
+      e.target.washrooms.checked && 'Washrooms',
+      e.target.others.checked && 'Others',
+    ].filter(Boolean);
 
-  const facilitiesString = selectedFacilities.join(', ');
-
-  
+    const facilitiesString = selectedFacilities.join(', ');
 
     const formData = {
       region: e.target.region.value,
@@ -66,12 +79,13 @@ function Forms() {
       email: e.target.email.value,
       phone_number: e.target.phone_number.value,
       lastname2: e.target.lastname2.value,
-      firstname2:e.target.firstname2.value,
+      firstname2: e.target.firstname2.value,
       id_number2: e.target.id_number2.value,
       gender2: e.target.gender2.value,
       date_of_birth2: e.target.date_of_birth2.value,
       email2: e.target.email2.value,
       phone_number2: e.target.phone_number2.value,
+      user_id: user_id,
     };
 
     fetch('http://127.0.0.1:5000/dataforms', {

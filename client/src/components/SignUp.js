@@ -30,9 +30,10 @@ function SignUp() {
         const data = await response.json();
         console.log('Signup successful:', data);
 
-        if (token) {
-          console.log(`Token from URL (Signup): ${token}`);
-          await handleEmailVerification(token);
+        if (data.access_token) {
+          console.log(`Token from server (Signup): ${data.access_token}`);
+          alert('Account successfully created. Kindly verify your email to log in.');
+          await handleEmailVerification(data.access_token);
         } else {
           alert('Account created! Check your email to verify your account.');
         }
@@ -51,7 +52,7 @@ function SignUp() {
     try {
       console.log(`This is the token on the URL (Verification): ${verificationToken}`);
 
-      const response = await fetch(`http://127.0.0.1:5000/verify-email?token=${verificationToken}`, {
+      const response = await fetch(`http://127.0.0.1:5000/verify-email/${verificationToken}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${verificationToken}`,
@@ -74,12 +75,12 @@ function SignUp() {
   };
 
   useEffect(() => {
-    console.log('UseEffect triggered');
-    if (token) {
-      console.log(`Token from URL (UseEffect): ${token}`);
-      handleEmailVerification(token);
-    }
-  }, []);
+  console.log('UseEffect triggered');
+  if (token) {
+    console.log(`Token from URL (UseEffect): ${token}`);
+    handleEmailVerification(token);
+  }
+}, []);
 
   return (
     <div>
