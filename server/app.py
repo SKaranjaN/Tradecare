@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, url_for
+from flask import Flask, jsonify, request, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -113,14 +113,18 @@ def custom_jwt_required(fn):
 @custom_jwt_required
 def verify_email(token):
     try:
-        verify_jwt_in_request()  
         current_user = get_jwt_identity()
         user = User.query.get_or_404(current_user)
 
+        # Check if the email is already verified
+        if user.email_verified:
+            return redirect(url_for('login'))
+
+        # Mark the user's email as verified
         user.email_verified = True
         db.session.commit()
 
-        return jsonify({'message': 'Email verified successfully'})
+        return redirect(url_for('login', _external=True))
 
     except Exception as e:
         db.session.rollback()
