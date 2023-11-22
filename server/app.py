@@ -1,12 +1,13 @@
-from flask import Flask, jsonify, request, url_for 
+from flask import Flask, jsonify, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import IntegrityError
 from models import db, User, DataForm
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, verify_jwt_in_request
 from flask_mail import Mail, Message
+from functools import wraps
 
 app = Flask(__name__)
 CORS(app)
@@ -27,6 +28,28 @@ app.config['MAIL_DEFAULT_SENDER'] = 'sakakeja.ke@gmail.com'
 mail = Mail(app)
 # debugging on the email verification
 app.config['MAIL_DEBUG'] = True
+
+# login endpoint
+@app.route('/login', methods=['POST'])
+def login():
+    try:
+        data = request.get_json()
+
+        # Find the user by email
+        user = User.query.filter_by(email=data['email']).first()
+
+        if user and check_password_hash(user.password, data['password']):
+            if user.email_verified:
+                # Create JWT token
+                access_token = create_access_token(identity=user.id)
+                return jsonify({'access_token': access_token, 'user': user.to_dict()}), 200
+            else:
+                return jsonify({'error': 'Please verify your email before logging in'}), 400
+        else:
+            return jsonify({'error': 'Invalid email or password'}), 401
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/users', methods=['GET', 'POST'])
 def users():
@@ -56,7 +79,7 @@ def users():
             db.session.commit()
 
             # Create JWT token
-            access_token = create_access_token(identity=new_user.id)
+            access_token = create_access_token(identity=str(new_user.id))
 
             # Send verification email
             verification_link = url_for('verify_email', token=access_token, _external=True)
@@ -75,16 +98,28 @@ def users():
             db.session.rollback()
             return jsonify({'error': str(e)}), 500
 
+def custom_jwt_required(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        try:
+            verify_jwt_in_request()
+            return fn(*args, **kwargs)
+        except Exception as e:
+            return jsonify({'error': str(e)}), 401
+    return wrapper
 
-#jwt authentication and verification
+# jwt authentication and verification
 @app.route('/verify-email/<token>', methods=['GET'])
-@jwt_required()
+@custom_jwt_required
 def verify_email(token):
     try:
+        verify_jwt_in_request()  
         current_user = get_jwt_identity()
         user = User.query.get_or_404(current_user)
+
         user.email_verified = True
         db.session.commit()
+
         return jsonify({'message': 'Email verified successfully'})
 
     except Exception as e:
