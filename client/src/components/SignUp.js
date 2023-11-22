@@ -30,66 +30,56 @@ function SignUp() {
         const data = await response.json();
         console.log('Signup successful:', data);
 
-        // Check if there is a token for email verification
         if (token) {
+          console.log(`Token from URL (Signup): ${token}`);
           await handleEmailVerification(token);
         } else {
-          // Display success alert for regular sign-up
           alert('Account created! Check your email to verify your account.');
         }
-
-        // Handle successful signup, e.g., redirect to login page
       } else {
         const errorData = await response.json();
         console.error('Signup failed:', errorData);
-        // Display error alert
         alert(`Signup failed: ${errorData.error}`);
-        // Handle failed signup, e.g., display error message
       }
     } catch (error) {
       console.error('Error during signup:', error);
-      // Display error alert
       alert('Error during signup. Please try again.');
-      // Handle other errors
     }
   };
 
   const handleEmailVerification = async (verificationToken) => {
     try {
-      const response = await fetch(`http://127.0.0.1:5000/verify-email/${verificationToken}`, {
+      console.log(`This is the token on the URL (Verification): ${verificationToken}`);
+
+      const response = await fetch(`http://127.0.0.1:5000/verify-email?token=${verificationToken}`, {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${verificationToken}`,
+          'Authorization': `Bearer ${verificationToken}`,
         },
       });
 
       if (response.ok) {
         const data = await response.json();
         console.log('Email verification successful:', data);
-        // Display success alert for email verification
         alert('Email verified successfully. You can now log in.');
-        // Handle successful email verification, e.g., redirect to login page
       } else {
         const errorData = await response.json();
         console.error('Email verification failed:', errorData);
-        // Display error alert for email verification
         alert(`Email verification failed: ${errorData.error}`);
-        // Handle failed email verification, e.g., display error message
       }
     } catch (error) {
       console.error('Error during email verification:', error);
-      // Display error alert for email verification
       alert('Error during email verification. Please try again.');
-      // Handle other errors
     }
   };
 
   useEffect(() => {
-    // If there is a token, perform email verification
+    console.log('UseEffect triggered');
     if (token) {
+      console.log(`Token from URL (UseEffect): ${token}`);
       handleEmailVerification(token);
     }
-  }, [token]);
+  }, []);
 
   return (
     <div>
