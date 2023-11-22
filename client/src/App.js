@@ -4,20 +4,18 @@ import Login from './components/Login';
 import Home from './components/Home';
 import SignUp from './components/SignUp';
 import Forms from './components/form';
-import { AuthProvider } from './components/AuthContext';
+// import Verification from './components/Verification';
 
 function App() {
   return (
     <Router>
-      {/* Wrap the entire application with AuthProvider */}
-      <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/home" element={<Home />} />
           <Route path="/form" element={<Forms />} />
+          {/* <Route path="/verify-email/:token" component={Verification} /> */}
         </Routes>
-      </AuthProvider>
     </Router>
   );
 }

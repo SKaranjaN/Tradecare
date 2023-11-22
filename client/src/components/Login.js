@@ -48,15 +48,14 @@ function Login() {
 
       if (response.ok) {
         const { access_token, user } = data;
-
+      
         // Save the token in localStorage or secure storage
         localStorage.setItem('access_token', access_token);
-
+      
         if (user.email_verified) {
-          // Navigate to the home page
+          // Navigate to the home page after successful login
           navigate('/home');
         } else {
-          // Email exists but not verified (this block should not be reached, as we checked earlier)
           alert('Unexpected: Email exists but not verified.');
         }
       } else if (response.status === 401) {

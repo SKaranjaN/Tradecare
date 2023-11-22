@@ -1,20 +1,19 @@
-// Home.js
 import React from 'react';
-import { useAuth } from './AuthContext'; // Adjust the path based on your project structure
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Nav from './nav';
 
 function Home() {
-  const { isLoggedIn, logout } = useAuth();
+  const navigate = useNavigate();
 
-  if (!isLoggedIn) {
-    return <Navigate to="/login" />;
-  }
+  const handleLogout = () => {
+    navigate('/login');
+  };
 
   return (
     <div>
+      <Nav />
       <h1>Home Page</h1>
-      <button onClick={logout}>Logout</button>
-      {/* Other content for the home page */}
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 }
