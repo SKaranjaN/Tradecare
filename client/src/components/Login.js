@@ -11,6 +11,31 @@ function Login() {
     try {
       setLoading(true);
 
+      // Check if the email exists
+      const userResponse = await fetch(`http://127.0.0.1:5000/users?email=${email}`);
+      const userData = await userResponse.json();
+
+      console.log('User Data:', userData);
+
+      if (!userResponse.ok) {
+        // Handle invalid response from the server
+        alert('Error checking email existence. Please try again.');
+        return;
+      }
+
+      if (userData.exists !== undefined && !userData.exists) {
+        // Email doesn't exist
+        alert('Email does not exist.');
+        return;
+      }
+
+      if (userData.email_verified !== undefined && !userData.email_verified) {
+        // Email exists but not verified
+        alert('Please verify your email before logging in.');
+        return;
+      }
+
+      // Proceed with the login
       const response = await fetch('http://127.0.0.1:5000/login', {
         method: 'POST',
         headers: {
@@ -31,12 +56,15 @@ function Login() {
           // Navigate to the home page
           navigate('/home');
         } else {
-          // Email exists but not verified
-          alert('Please verify your email before logging in.');
+          // Email exists but not verified (this block should not be reached, as we checked earlier)
+          alert('Unexpected: Email exists but not verified.');
         }
-      } else {
+      } else if (response.status === 401) {
         // Invalid email or password
         alert('Invalid email or password.');
+      } else {
+        // Handle other error cases
+        alert('Please verify your email first.');
       }
     } catch (error) {
       console.error('Login failed:', error.message);
