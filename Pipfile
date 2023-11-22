@@ -11,6 +11,8 @@ sqlalchemy-serializer = "*"
 sqlalchemy-orm = "*"
 flask-restful = "*"
 flask-cors = "*"
+flask-jwt-extended = "*"
+flask-mail = "*"
 
 [dev-packages]
 
