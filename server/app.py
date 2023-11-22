@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, url_for, redirect
+from flask import Flask, jsonify, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -8,6 +8,10 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, verify_jwt_in_request
 from flask_mail import Mail, Message
 from functools import wraps
+from datetime import timedelta
+from jwt.exceptions import ExpiredSignatureError
+from secrets import token_urlsafe 
+
 
 app = Flask(__name__)
 CORS(app)
@@ -15,6 +19,7 @@ app.config.from_object('config.Config')
 db.init_app(app)
 migrate = Migrate(app, db)
 app.config['JWT_SECRET_KEY'] = 'e6e893630a1f0fb0e61ed4fcd4b3be58564b2d8797387890e92f3b7a4edc94c8'
+app.config['JWT_EXPIRATION_DELTA'] = timedelta(days=7)
 jwt = JWTManager(app)
 
 # Flask-Mail configuration
@@ -72,7 +77,8 @@ def users():
                 lastname=data['lastname'],
                 email=data['email'],
                 user_type=user_type,
-                password=generate_password_hash(data['password'])
+                password=generate_password_hash(data['password']),
+                verification_token=token_urlsafe(32)
             )
 
             db.session.add(new_user)
@@ -82,12 +88,15 @@ def users():
             access_token = create_access_token(identity=str(new_user.id))
 
             # Send verification email
-            verification_link = url_for('verify_email', token=access_token, _external=True)
+            verification_link = url_for('verify_email', token=new_user.verification_token, _external=True)
             message_body = f"Click the following link to verify your email: {verification_link}"
             msg = Message("Email Verification", recipients=[new_user.email], body=message_body)
             mail.send(msg)
 
-            response_dict = new_user.to_dict()
+            response_dict = {
+                'user': new_user.to_dict(),
+                'access_token': access_token
+            }
             return jsonify({'user': response_dict, 'access_token': access_token}), 201
 
         except IntegrityError:
@@ -108,23 +117,31 @@ def custom_jwt_required(fn):
             return jsonify({'error': str(e)}), 401
     return wrapper
 
+def verify_jwt_token(token):
+    try:
+        data = jwt.decode(token, app.config['JWT_SECRET_KEY'], algorithms=['HS256'])
+        return data['identity']
+    except jwt.ExpiredSignatureError:
+        raise Exception('Token has expired')
+    except jwt.InvalidTokenError:
+        raise Exception('Invalid token')
+
 # jwt authentication and verification
 @app.route('/verify-email/<token>', methods=['GET'])
-@custom_jwt_required
 def verify_email(token):
     try:
+        verify_jwt_in_request(optional=True)  # Verify the token without requiring it in the request context
         current_user = get_jwt_identity()
         user = User.query.get_or_404(current_user)
 
-        # Check if the email is already verified
-        if user.email_verified:
-            return redirect(url_for('login'))
-
-        # Mark the user's email as verified
         user.email_verified = True
         db.session.commit()
 
-        return redirect(url_for('login', _external=True))
+        return jsonify({'message': 'Email verified successfully'})
+
+    except ExpiredSignatureError: 
+        db.session.rollback()
+        return jsonify({'error': 'Token has expired'}), 401
 
     except Exception as e:
         db.session.rollback()
@@ -200,7 +217,7 @@ def dataForms():
                     gender2=data['gender2'],
                     date_of_birth2=['date_of_birth2'],
                     email2=data['email2'],                
-                    phone_number2 = data['phone_number2'] 
+                    phone_number2 = data['phone_number2']
                 )
 
                 db.session.add(new_form)

@@ -16,6 +16,7 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String, unique=True, nullable=False)
     email_verified = db.Column(db.Boolean, default=False)
     password = db.Column(db.String, nullable=False)
+    verification_token = db.Column(db.String(255), nullable=True)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
@@ -35,6 +36,8 @@ class User(db.Model, SerializerMixin):
             "user_type" : self.user_type,
             "email": self.email,
             'email_verified': self.email_verified,
+            "password": self.password,
+            "verification_token": self.verification_token,
             "created_at": self.created_at,
             "updated_at": self.updated_at
         }
