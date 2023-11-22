@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_serializer import SerializerMixin
-from sqlalchemy.orm import validates 
+from sqlalchemy.orm import validates, relationship
 import re
 from datetime import datetime
 
@@ -18,6 +18,8 @@ class User(db.Model, SerializerMixin):
     password = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+
+    dataform = relationship('DataForm', back_populates='user', uselist=False) #one to one table relationship to the dataform table
 
     @validates('password')
     def validate_password(self, key, password):
@@ -67,6 +69,10 @@ class DataForm(db.Model, SerializerMixin):
     date_of_birth2 = db.Column(db.String) 
     email2 = db.Column(db.String)
     phone_number2 = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    user = relationship('User', back_populates='dataform') #table relationship to the user table
+
 
     def to_dict(self):
         return {
@@ -96,7 +102,8 @@ class DataForm(db.Model, SerializerMixin):
             "gender2" : self.gender2,
             "date_of_birth2" : self.date_of_birth2,
             "email2" : self.email2,
-            "phone_number2" : self.phone_number2
+            "phone_number2" : self.phone_number2,
+            "user_id": self.user_id
         }
         
 
