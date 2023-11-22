@@ -25,6 +25,8 @@ app.config['MAIL_USERNAME'] = 'sakakeja.ke@gmail.com'
 app.config['MAIL_PASSWORD'] = 'whem kkaz oqza cakk'
 app.config['MAIL_DEFAULT_SENDER'] = 'sakakeja.ke@gmail.com'
 mail = Mail(app)
+# debugging on the email verification
+app.config['MAIL_DEBUG'] = True
 
 @app.route('/users', methods=['GET', 'POST'])
 def users():
