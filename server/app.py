@@ -1,19 +1,33 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, url_for 
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import IntegrityError
 from models import db, User, DataForm
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_mail import Mail, Message
 
 app = Flask(__name__)
 CORS(app)
 app.config.from_object('config.Config')
 db.init_app(app)
 migrate = Migrate(app, db)
+app.config['JWT_SECRET_KEY'] = 'e6e893630a1f0fb0e61ed4fcd4b3be58564b2d8797387890e92f3b7a4edc94c8'
+jwt = JWTManager(app)
+
+# Flask-Mail configuration
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'sakakeja.ke@gmail.com'
+app.config['MAIL_PASSWORD'] = 'whem kkaz oqza cakk'
+app.config['MAIL_DEFAULT_SENDER'] = 'sakakeja.ke@gmail.com'
+mail = Mail(app)
 
 @app.route('/users', methods=['GET', 'POST'])
-def Users():
+def users():
     if request.method == 'GET':
         users_list = User.query.all()
         users_dict_list = [user.to_dict() for user in users_list]
@@ -23,19 +37,33 @@ def Users():
         try:
             data = request.get_json()
 
+            if data['email'].endswith('@reactcertafrica.com'):
+                user_type = 'admin'
+            else:
+                user_type = 'user'
+
             new_user = User(
                 firstname=data['firstname'],
                 lastname=data['lastname'],
                 email=data['email'],
-                user_type = data['email'],
-                password=generate_password_hash(data['password'])  
+                user_type=user_type,
+                password=generate_password_hash(data['password'])
             )
 
             db.session.add(new_user)
             db.session.commit()
 
+            # Create JWT token
+            access_token = create_access_token(identity=new_user.id)
+
+            # Send verification email
+            verification_link = url_for('verify_email', token=access_token, _external=True)
+            message_body = f"Click the following link to verify your email: {verification_link}"
+            msg = Message("Email Verification", recipients=[new_user.email], body=message_body)
+            mail.send(msg)
+
             response_dict = new_user.to_dict()
-            return jsonify(response_dict), 201
+            return jsonify({'user': response_dict, 'access_token': access_token}), 201
 
         except IntegrityError:
             db.session.rollback()
@@ -44,6 +72,22 @@ def Users():
         except Exception as e:
             db.session.rollback()
             return jsonify({'error': str(e)}), 500
+
+
+#jwt authentication and verification
+@app.route('/verify-email/<token>', methods=['GET'])
+@jwt_required()
+def verify_email(token):
+    try:
+        current_user = get_jwt_identity()
+        user = User.query.get_or_404(current_user)
+        user.email_verified = True
+        db.session.commit()
+        return jsonify({'message': 'Email verified successfully'})
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/users/<int:user_id>', methods=['GET', 'PATCH', 'DELETE'])
 def user_by_id(user_id):
