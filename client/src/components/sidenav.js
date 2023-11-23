@@ -5,7 +5,7 @@ function SideNav({ userId }) {
     console.log(`SideNav${userId}`)
     return (
       <div className="sidebar">
-        <Link to={{ pathname: '/form', state: { userId } }}>Hub</Link><br />
+        <Link to={{ pathname: '/form', state: { userId: userId } }}>Hub</Link><br />
         <Link to="#">Aggregation</Link><br />
         <Link to="#">Users</Link><br />
         <Link to="#">Farmer</Link><br />

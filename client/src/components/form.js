@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../../src/styles/forms.css';
 
-function Forms() {
+function Forms({ userId }) {
   const [user_id, setUser_id] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [ownership, setOwnership] = useState('');
@@ -11,22 +11,10 @@ function Forms() {
 
   const dateInputRef = useRef(null);
 
-  const location = useLocation();
   
-  // Try to get userId from location state, default to null if not present
-  const userId = location.state?.userId || null;
-  console.log(`Retrieving: ${userId}`)
-
-  useEffect(() => {
-    // Set user_id state when userId changes
-    if (userId !== null) {
-      setUser_id(userId);
-    }
-  }, [userId]);
-  console.log(`Form: ${userId}`)
-
+  console.log(`Form after fetch ${userId}`)
   const handleChange = (e) => {
-    // setDate(e.target.value);
+    // Handle changes as needed
   };
 
   const handleOwnershipChange = (e) => {
@@ -44,7 +32,6 @@ function Forms() {
   const handleDateOfBirthChange = (e) => {
     setDateOfBirth(e.target.value);
   };
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -110,6 +97,7 @@ function Forms() {
         console.error('Error:', error);
       });
   };
+
 
   return (
     <div className="forms">
