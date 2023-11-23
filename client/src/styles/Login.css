@@ -8,6 +8,15 @@ body {
   height: 100vh;
 }
 
+input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
 .background-page {
   background-image: url('https://images.unsplash.com/photo-1493673272479-a20888bcee10?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTJ8fHBsYW50c3xlbnwwfHwwfHx8MA%3D%3D');
   background-size: cover;

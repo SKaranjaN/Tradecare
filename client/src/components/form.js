@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import '../../src/styles/forms.css';
 import '../styles/Form.css'
 
 function Forms({ userId }) {
