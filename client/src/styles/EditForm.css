@@ -1,16 +1,17 @@
-.forms {
+.edit-form-page {
     max-width: 60%;
     margin: 0 auto;
     padding: 20px;
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-top: 150%;
     text-align: center;
+    margin-top: 50px;
   }
   
   .input-pair {
     margin-bottom: 20px;
+    text-align: center;
   }
   
   .label {
@@ -19,8 +20,7 @@
     font-size: 16px;
   }
   
-  .input,
-  .select {
+  .input {
     width: 100%;
     padding: 8px;
     margin-top: 5px;
@@ -30,23 +30,10 @@
     box-sizing: border-box;
   }
   
-  .h2 {
-    margin-top: 15px;
-  }
-  
-  .yes-option {
-    margin-left: 20px;
-  }
-  
-  .checkbox-label {
-    display: block;
-    margin-bottom: 10px;
-  }
-  
   .submit-btn {
     background-color: #007bff;
     color: #ffffff;
-    padding: 10px ;
+    padding: 10px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
