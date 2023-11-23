@@ -1,33 +1,32 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { jwtDecode as jwt_decode } from 'jwt-decode';
+import { useLocation } from 'react-router-dom';
 import '../../src/styles/forms.css';
 
 function Forms() {
   const [user_id, setUser_id] = useState('');
-  const [date, setDate] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
   const [ownership, setOwnership] = useState('');
   const [input, setInput] = useState('');
   const [buildingType, setBuildingType] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
 
   const dateInputRef = useRef(null);
 
+  const location = useLocation();
+  
+  // Try to get userId from location state, default to null if not present
+  const userId = location.state?.userId || null;
+  console.log(`Retrieving: ${userId}`)
+
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-
-    if (token) {
-      const decodedToken = jwt_decode(token);
-
-      if (decodedToken) {
-        const userId = decodedToken.id;
-        setUser_id(userId);
-      }
+    // Set user_id state when userId changes
+    if (userId !== null) {
+      setUser_id(userId);
     }
-  }, []);
+  }, [userId]);
+  console.log(`Form: ${userId}`)
 
   const handleChange = (e) => {
-    // Handle form input changes
-    // Example: setDate(e.target.value);
+    // setDate(e.target.value);
   };
 
   const handleOwnershipChange = (e) => {
@@ -45,6 +44,7 @@ function Forms() {
   const handleDateOfBirthChange = (e) => {
     setDateOfBirth(e.target.value);
   };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -75,7 +75,7 @@ function Forms() {
       lastname: e.target.lastname.value,
       id_number: e.target.id_number.value,
       gender: e.target.gender.value,
-      date_of_birth: dateOfBirth,
+      date_of_birth: e.target.date_of_birth.value,
       email: e.target.email.value,
       phone_number: e.target.phone_number.value,
       lastname2: e.target.lastname2.value,
@@ -85,8 +85,10 @@ function Forms() {
       date_of_birth2: e.target.date_of_birth2.value,
       email2: e.target.email2.value,
       phone_number2: e.target.phone_number2.value,
-      user_id: user_id,
+      user_id: userId,
     };
+
+    console.log('Form Data:', formData);
 
     fetch('http://127.0.0.1:5000/dataforms', {
       method: 'POST',
@@ -95,7 +97,12 @@ function Forms() {
       },
       body: JSON.stringify(formData),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((data) => {
         console.log('Success:', data);
       })

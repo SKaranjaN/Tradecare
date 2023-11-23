@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode as jwt_decode } from 'jwt-decode';
+import { useLocation } from 'react-router-dom';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogin = async () => {
     try {
@@ -48,13 +51,20 @@ function Login() {
 
       if (response.ok) {
         const { access_token, user } = data;
-      
+
         // Save the token in localStorage or secure storage
         localStorage.setItem('access_token', access_token);
-      
+
+        // Decode the token to get user information
+        const decodedToken = jwt_decode(access_token);
+        const userId = decodedToken.sub;
+        console.log(decodedToken)
+        // Log the user's ID to the console
+        console.log('User ID:', userId);
+
         if (user.email_verified) {
           // Navigate to the home page after successful login
-          navigate('/home');
+          navigate('/home', { state: { userId } });
         } else {
           alert('Unexpected: Email exists but not verified.');
         }
