@@ -10,7 +10,7 @@ import EditForm from './components/EditForm';
 
 function App() {
   return (
-    <Router>
+      <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
@@ -20,6 +20,7 @@ function App() {
           {/* <Route path="/verify-email/:token" component={Verification} /> */}
         </Routes>
     </Router>
+    
   );
 }
 

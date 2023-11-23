@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { jwtDecode as jwt_decode } from 'jwt-decode';
 import { useLocation } from 'react-router-dom';
 import '../styles/Login.css';
@@ -85,7 +85,8 @@ function Login() {
   };
 
   return (
-    <div className="container">
+    <div className='background-page'>
+      <div className="container">
       <h1 className="title">Login Page</h1>
       <form className="form">
         <label className="label">Email:</label>
@@ -107,7 +108,10 @@ function Login() {
         <button className="button" type="button" onClick={handleLogin} disabled={loading}>
           Login
         </button>
+        <br />
+        <Link to={'/signup'}>Sign Up</Link>
       </form>
+    </div>
     </div>
   );
 }

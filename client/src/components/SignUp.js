@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import '../styles/SignUp.css';
 
 function SignUp() {
@@ -63,7 +63,7 @@ function SignUp() {
       if (response.ok) {
         const data = await response.json();
         console.log('Email verification successful:', data);
-        alert('Email verified successfully. You can now log in.');
+        // alert('Email verified successfully. You can now log in.');
       } else {
         const errorData = await response.json();
         console.error('Email verification failed:', errorData);
@@ -84,7 +84,8 @@ function SignUp() {
 }, []);
 
 return (
-  <div className="sign-up-container">
+  <div className='background'>
+    <div className="sign-up-container">
     <h1 className="title">Sign Up</h1>
     <form className="form" onSubmit={handleSubmit}>
       <label className="label">
@@ -134,7 +135,10 @@ return (
       <button className="button" type="submit">
         Sign Up
       </button>
+      <br />
+      <Link to={'/login'}>Login</Link>
     </form>
+  </div>
   </div>
 );
 }

@@ -92,6 +92,7 @@ function Forms({ userId }) {
         return response.json();
       })
       .then((data) => {
+        alert("The form has successfully being registered")
         console.log('Success:', data);
       })
       .catch((error) => {
@@ -99,10 +100,9 @@ function Forms({ userId }) {
       });
   };
 
-
   return (
     <div className="forms">
-      <h2>Forms</h2>
+      <h2>Hub Registration Form</h2>
       <form onSubmit={handleSubmit}>
         <div className="input-pair">
           <label>Region</label>

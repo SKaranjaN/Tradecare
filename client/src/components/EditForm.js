@@ -55,6 +55,7 @@ function EditForm({ userId }) {
         });
 
         if (response.ok) {
+          alert('The form has successfully been edited')
           console.log('Form data updated successfully!');
         } else {
           console.error('Error updating form data:', response.statusText);
