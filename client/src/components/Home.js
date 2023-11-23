@@ -21,7 +21,6 @@ function Home() {
       <SideNav userId={userId} />
       <Forms userId={userId} />
       <EditForm userId={userId} />
-      <h1>Home Page</h1>
       <button onClick={handleLogout}>Logout</button>
     </div>
   );

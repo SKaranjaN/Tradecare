@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode as jwt_decode } from 'jwt-decode';
 import { useLocation } from 'react-router-dom';
+import '../styles/Login.css';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -84,16 +85,26 @@ function Login() {
   };
 
   return (
-    <div>
-      <h1>Login Page</h1>
-      <form>
-        <label>Email:</label>
-        <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+    <div className="container">
+      <h1 className="title">Login Page</h1>
+      <form className="form">
+        <label className="label">Email:</label>
+        <input
+          className="input"
+          type="text"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
         <br />
-        <label>Password:</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <label className="label">Password:</label>
+        <input
+          className="input"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
         <br />
-        <button type="button" onClick={handleLogin} disabled={loading}>
+        <button className="button" type="button" onClick={handleLogin} disabled={loading}>
           Login
         </button>
       </form>

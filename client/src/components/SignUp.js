@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import '../styles/SignUp.css';
 
 function SignUp() {
   const { token } = useParams();
@@ -82,54 +83,60 @@ function SignUp() {
   }
 }, []);
 
-  return (
-    <div>
-      <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          First Name:
-          <input
-            type="text"
-            name="firstname"
-            value={formData.firstname}
-            onChange={handleChange}
-          />
-        </label>
-        <br />
-        <label>
-          Last Name:
-          <input
-            type="text"
-            name="lastname"
-            value={formData.lastname}
-            onChange={handleChange}
-          />
-        </label>
-        <br />
-        <label>
-          Email:
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-          />
-        </label>
-        <br />
-        <label>
-          Password:
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-          />
-        </label>
-        <br />
-        <button type="submit">Sign Up</button>
-      </form>
-    </div>
-  );
+return (
+  <div className="sign-up-container">
+    <h1 className="title">Sign Up</h1>
+    <form className="form" onSubmit={handleSubmit}>
+      <label className="label">
+        First Name:
+        <input
+          className="input"
+          type="text"
+          name="firstname"
+          value={formData.firstname}
+          onChange={handleChange}
+        />
+      </label>
+      <br />
+      <label className="label">
+        Last Name:
+        <input
+          className="input"
+          type="text"
+          name="lastname"
+          value={formData.lastname}
+          onChange={handleChange}
+        />
+      </label>
+      <br />
+      <label className="label">
+        Email:
+        <input
+          className="input"
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+        />
+      </label>
+      <br />
+      <label className="label">
+        Password:
+        <input
+          className="input"
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+        />
+      </label>
+      <br />
+      <button className="button" type="submit">
+        Sign Up
+      </button>
+    </form>
+  </div>
+);
 }
 
 export default SignUp;

@@ -1,26 +1,27 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import '../styles/SideNav.css'
 
 function SideNav({ userId }) {
     console.log(`SideNav${userId}`)
     return (
-      <div className="sidebar">
-        <Link to={{ pathname: '/form', state: { userId: userId } }}>Hub</Link><br />
-        <Link to="#">Aggregation</Link><br />
-        <Link to="#">Users</Link><br />
-        <Link to="#">Farmer</Link><br />
-        <Link tto="#">Seasons</Link><br />
-        <Link to="#">Extension Services</Link><br />
-        <Link to="#">Training</Link><br />
-        <Link to="#">Price Distribution</Link><br />
-        <Link to="#">Buying</Link><br />
-        <Link to="#">Payments</Link><br />
-        <Link to="#">Loading</Link><br />
-        <Link to="#">Offloading</Link><br />
-        <Link to="#">Rural Workers</Link><br />
-        <Link to="#">Inputs Finance</Link><br />
-      </div>
-    );
-  }
-  
-  export default SideNav;
+        <div className="sidebar">
+          <Link to={{ pathname: '/form', state: { userId: userId } }}>Hub</Link>
+          <Link to="#">Aggregation</Link>
+          <Link to="#">Users</Link>
+          <Link to="#">Farmer</Link>
+          <Link to="#">Seasons</Link>
+          <Link to="#">Extension Services</Link>
+          <Link to="#">Training</Link>
+          <Link to="#">Price Distribution</Link>
+          <Link to="#">Buying</Link>
+          <Link to="#">Payments</Link>
+          <Link to="#">Loading</Link>
+          <Link to="#">Offloading</Link>
+          <Link to="#">Rural Workers</Link>
+          <Link to="#">Inputs Finance</Link>
+        </div>
+      );
+    }
+    
+    export default SideNav;

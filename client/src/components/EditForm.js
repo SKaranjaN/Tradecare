@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import '../styles/EditForm.css'
 
 function EditForm({ userId }) {
   const [formData, setFormData] = useState({});
@@ -72,10 +73,10 @@ function EditForm({ userId }) {
 
 
   return (
-    <div>
+    <div className="edit-form-page">
       <h1>EditForm Page</h1>
       <form>
-        <label>
+        <label className="input-pair">
           Region:
           <input
             type="text"
@@ -84,7 +85,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           Hub Name:
           <input
             type="text"
@@ -93,7 +94,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           Hub Code:
           <input
             type="text"
@@ -102,7 +103,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           Address:
           <input
             type="text"
@@ -111,7 +112,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           Ownership:
           <input
             type="text"
@@ -120,7 +121,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           Floor Size:
           <input
             type="text"
@@ -129,7 +130,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           Facilities:
           <input
             type="text"
@@ -138,7 +139,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           Input Center:
           <input
             type="text"
@@ -147,7 +148,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           GPRS Longitude:
           <input
             type="text"
@@ -156,7 +157,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           GPRS Latitude:
           <input
             type="text"
@@ -165,7 +166,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           ID Number:
           <input
             type="text"
@@ -174,7 +175,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           Gender:
           <input
             type="text"
@@ -183,7 +184,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           Date of Birth:
           <input
             type="text"
@@ -192,7 +193,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           Phone Number:
           <input
             type="text"
@@ -201,7 +202,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           First Name:
           <input
             type="text"
@@ -210,7 +211,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           Last Name:
           <input
             type="text"
@@ -219,7 +220,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           Email:
           <input
             type="text"
@@ -228,7 +229,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           ID Number 2:
           <input
             type="text"
@@ -237,7 +238,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           Gender 2:
           <input
             type="text"
@@ -246,7 +247,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           Date of Birth 2:
           <input
             type="text"
@@ -255,7 +256,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           Phone Number 2:
           <input
             type="text"
@@ -264,7 +265,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           First Name 2:
           <input
             type="text"
@@ -273,7 +274,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           Last Name 2:
           <input
             type="text"
@@ -282,7 +283,7 @@ function EditForm({ userId }) {
           />
         </label>
   
-        <label>
+        <label className="input-pair">
           Email 2:
           <input
             type="text"
@@ -293,10 +294,11 @@ function EditForm({ userId }) {
   
       </form>
   
-      <button onClick={handleFormSubmit}>Save Changes</button>
+      <button className="submit-btn" onClick={handleFormSubmit}>
+        Save Changes
+      </button>
     </div>
   );
-  
 }
 
 export default EditForm;
