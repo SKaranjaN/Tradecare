@@ -1,8 +1,9 @@
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useRoutes } from 'react-router-dom';
 import Nav from './nav';
 import SideNav from './sidenav';
 import Forms from './form';
+import EditForm from './EditForm';
 
 function Home() {
   const navigate = useNavigate();
@@ -13,12 +14,13 @@ function Home() {
   const handleLogout = () => {
     navigate('/login');
   };
-  console.log(`home${userId}`)
+
   return (
     <div>
-      <Nav />
+      <Nav userId={userId} />
       <SideNav userId={userId} />
       <Forms userId={userId} />
+      <EditForm userId={userId} />
       <h1>Home Page</h1>
       <button onClick={handleLogout}>Logout</button>
     </div>

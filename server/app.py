@@ -180,55 +180,61 @@ def user_by_id(user_id):
     
     # table dataforms endpoints
 
-@app.route('/dataforms', methods=['GET', 'POST'])
+@app.route('/dataforms', methods=['GET', 'POST', 'OPTIONS'])
 def dataForms():
-        if request.method == 'GET':
-            forms_list = DataForm.query.all()
-            forms_dict_list = [form.to_dict() for form in forms_list]
-            return jsonify(forms_dict_list), 200
+    if request.method == 'OPTIONS':
+        # Preflight request, respond successfully
+        return jsonify({}), 200
 
-        elif request.method == 'POST':
-            try:
-                data = request.get_json()
+    if request.method == 'GET':
+        forms_list = DataForm.query.all()
+        forms_dict_list = [form.to_dict() for form in forms_list]
+        return jsonify(forms_dict_list), 200
 
-                new_form = DataForm(
-                    region=data['region'],
-                    hub_name=data['hub_name'],
-                    hub_code=data['hub_code'],
-                    address=data['address'],
-                    year_established=data['year_established'],
-                    ownership=data['ownership'],
-                    floor_size=data['floor_size'],
-                    facilities=data['facilities'],
-                    input_center=data['input_center'],
-                    type_of_building=['type_of_building'],
-                    gprs_longitude=data['gprs_longitude'],
-                    gprs_latitude=data['gprs_latitude'],
-                    firstname=data['firstname'],
-                    lastname=data['lastname'],
-                    id_number=data['id_number'],
-                    gender=data['gender'],
-                    date_of_birth=['date_of_birth'],
-                    email=data['email'],                
-                    phone_number = data['phone_number'],
-                    lastname2=data['lastname2'],
-                    firstname2=data['firstname2'],
-                    id_number2=data['id_number2'],
-                    gender2=data['gender2'],
-                    date_of_birth2=['date_of_birth2'],
-                    email2=data['email2'],                
-                    phone_number2 = data['phone_number2']
-                )
+    elif request.method == 'POST':
+        try:
+            data = request.get_json()
 
-                db.session.add(new_form)
-                db.session.commit()
+            new_form = DataForm(
+                region=data['region'],
+                hub_name=data['hub_name'],
+                hub_code=data['hub_code'],
+                address=data['address'],
+                year_established=data['year_established'],
+                ownership=data['ownership'],
+                floor_size=data['floor_size'],
+                facilities=data['facilities'],
+                input_center=data['input_center'],
+                type_of_building=data['type_of_building'],
+                gprs_longitude=data['gprs_longitude'],
+                gprs_latitude=data['gprs_latitude'],
+                firstname=data['firstname'],
+                lastname=data['lastname'],
+                id_number=data['id_number'],
+                gender=data['gender'],
+                date_of_birth=data['date_of_birth'],
+                email=data['email'],
+                phone_number=data['phone_number'],
+                lastname2=data['lastname2'],
+                firstname2=data['firstname2'],
+                id_number2=data['id_number2'],
+                gender2=data['gender2'],
+                date_of_birth2=data['date_of_birth2'],
+                email2=data['email2'],
+                phone_number2=data['phone_number2'],
+                user_id=data['user_id']
+            )
 
-                response_dict = new_form.to_dict()
-                return jsonify(response_dict), 201
-            
-            except Exception as e:
-                db.session.rollback()
-                return jsonify({'error': str(e)}), 500
+            db.session.add(new_form)
+            db.session.commit()
+
+            response_dict = new_form.to_dict()
+            return jsonify(response_dict), 201
+
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error during form submission: {str(e)}")  # Add this line for logging
+            return jsonify({'error': 'An internal server error occurred'}), 500
             
 @app.route('/dataforms/<int:form_id>', methods=['GET', 'PATCH', 'DELETE'])
 def form_by_id(form_id):

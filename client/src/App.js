@@ -4,6 +4,7 @@ import Login from './components/Login';
 import Home from './components/Home';
 import SignUp from './components/SignUp';
 import Forms from './components/form';
+import EditForm from './components/EditForm';
 
 // import Verification from './components/Verification';
 
@@ -15,6 +16,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/home" element={<Home />} />
           <Route path="/form" element={<Forms />} />
+          <Route path="/edit-form" element={<EditForm />} />
           {/* <Route path="/verify-email/:token" component={Verification} /> */}
         </Routes>
     </Router>

@@ -9,7 +9,7 @@ db = SQLAlchemy()
 class User(db.Model, SerializerMixin):
     __tablename__ = "users"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     firstname = db.Column(db.String)
     lastname = db.Column(db.String)
     user_type = db.Column(db.String)
